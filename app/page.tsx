@@ -1,101 +1,180 @@
+"use client";
 import Image from "next/image";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Map, Building2, MapPin, Landmark, Calendar } from "lucide-react";
+import { ChatInput } from "@/components/ChatInput";
+import { ChatMessage } from "@/components/ChatMessage";
+import { sanitizeHTML } from "@/lib/utils";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [isLoading, setIsLoading] = useState(false);
+  const [components, setComponents] = useState<any[]>([]);
+  
+  // const { toast } = useToast();
+  const [isPreviewExpanded, setIsPreviewExpanded] = useState(false);
+  const [logs, setLogs] = useState<string[]>([]);
+  const [messages, setMessages] = useState<
+    Array<{ text: string; isUser: boolean }>
+  >([]);
+  // Store the first component’s key and the reward value
+  const [componentKey, setComponentKey] = useState<string | null>(null);
+  const [previewContent, setPreviewContent] = useState<React.ReactNode>(
+    <div className="text-center text-gray-500">
+      Your travel preview will appear here
+    </div>
+  );
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const handleSendMessage = (message: string) => {
+    // Add the user's message to the chat history.
+    setMessages((prev) => [...prev, { text: message, isUser: true }]);
+    setIsLoading(true);
+    setComponents([]); // Clear previous components
+
+    // Create an EventSource using the streaming endpoint with the query parameter.
+    const url = `http://localhost:8000/stream-travel-assistant?user_query=${encodeURIComponent(
+      message
+    )}`;
+    const eventSource = new EventSource(url);
+
+    eventSource.onopen = () => {
+      console.log("EventSource connection opened.");
+    };
+
+    eventSource.onmessage = (event) => {
+      try {
+        // Each SSE message is assumed to be a single component object.
+        const newComponent = JSON.parse(event.data);
+
+        // Append the new component to our state.
+        setComponents((prev) => {
+          const updatedComponents = [...prev, newComponent];
+          // Update the preview content based on the updated components list.
+          setPreviewContent(
+            <div className="space-y-8 flex flex-wrap justify-center">
+              {updatedComponents.map((component: any, index: number) => (
+                <div
+                  key={`${component.component_key}-${index}`}
+                  className="flex flex-wrap justify-center bg-white p-6 rounded-lg shadow-md"
+                >
+                  <div
+                    className="flex flex-wrap justify-center"
+                    // Use sanitizeHTML to safely inject raw HTML.
+                    dangerouslySetInnerHTML={sanitizeHTML(component.html)}
+                  />
+                  {component.css && <style>{component.css}</style>}
+                </div>
+              ))}
+            </div>
+          );
+          return updatedComponents;
+        });
+        setMessages((prev) => {
+          const alreadyAdded = prev.some(
+            (msg) => !msg.isUser && msg.text.includes("customized travel plan")
+          );
+          if (!alreadyAdded) {
+            return [
+              ...prev,
+              { text: "Here's your customized travel plan:", isUser: false },
+            ];
+          }
+          return prev;
+        });
+        // Update logs with the new component info.
+        setLogs((prev) => [
+          ...prev,
+          `Generated component: ${
+            newComponent.component_key
+          } (q: ${newComponent.q_value.toFixed(2)})`,
+        ]);
+
+        // Save the first component key (if not set) for reward submission.
+        setComponentKey((prev) => prev || newComponent.component_key);
+      } catch (error) {
+        console.error("Error parsing SSE data:", error);
+      }
+      // Optionally, you might setIsLoading(false) if your backend signals the end of the stream.
+    }
+  };
+
+    // eventSource.onerror = (err) => {
+    //   console.error("EventSource error:", err);
+    //   setIsLoading(false);
+    //   eventSource.close();
+    //   toast({
+    //     title: "Error",
+    //     description: "Failed to process your request. Please try again.",
+    //     variant: "destructive",
+    //   });
+    // };
+
+  const hasMessages = messages.length > 0;
+
+  const actionButtons = [
+    { icon: Map, label: "Explore places" },
+    { icon: Building2, label: "Suggest Hotels" },
+    { icon: MapPin, label: "Itineraries" },
+    { icon: Landmark, label: "Things to Do" },
+    { icon: Calendar, label: "My Bookings" },
+  ];
+
+  return (
+    <div className="flex h-screen justify-center bg-gray-50">
+      {/* Chat Section */}
+      <div
+        className={`transition-all duration-300 ease-in-out bg-white ${
+          isPreviewExpanded
+            ? "hidden"
+            : hasMessages
+            ? "w-1/3 border-r border-gray-200"
+            : "w-full"
+        }`}
+      >
+        <div className="flex flex-col h-full">
+          {!hasMessages ? (
+            <div className="flex-1 flex flex-col items-center justify-center p-8">
+              <h1 className="text-4xl font-bold mb-4">Hey There! 👋</h1>
+              <p className="text-xl text-gray-600 mb-12">
+                Where would you like to go?
+              </p>
+              <div className="w-full max-w-2xl mb-12">
+                <ChatInput onSend={handleSendMessage} disabled={isLoading} />
+                {/* <ChatInput onSend={handleSendMessage} disabled={isLoading} /> */}
+              </div>
+              <div className="flex flex-wrap justify-center gap-4">
+                {actionButtons.map((button, index) => (
+                  <button
+                    key={index}
+                    className="flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-gray-200 hover:bg-gray-50 transition-colors"
+                  >
+                    <button.icon className="w-5 h-5 text-travel-600" />
+                    <span className="text-sm">{button.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <>
+              <div className="p-4 border-b border-gray-200">
+                <h1 className="text-xl font-bold text-travel-900">
+                  Travel Assistant
+                </h1>
+              </div>
+              <div className="flex-1 overflow-auto p-4">
+                {messages.map((msg, index) => (
+                  <ChatMessage
+                    key={index}
+                    message={msg.text}
+                    isUser={msg.isUser}
+                  />
+                ))}
+              </div>
+            </>
+          )}
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </div>
     </div>
   );
 }
+
