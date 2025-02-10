@@ -1,30 +1,34 @@
 "use client";
-import Image from "next/image";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Map, Building2, MapPin, Landmark, Calendar } from "lucide-react";
 import { ChatInput } from "@/components/ChatInput";
 import { ChatMessage } from "@/components/ChatMessage";
 import { sanitizeHTML } from "@/lib/utils";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
+import { PreviewSection } from "@/components/PreviewSection";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function Home() {
-  const [isLoading, setIsLoading] = useState(false);
-  const [components, setComponents] = useState<any[]>([]);
-  
-  // const { toast } = useToast();
-  const [isPreviewExpanded, setIsPreviewExpanded] = useState(false);
-  const [logs, setLogs] = useState<string[]>([]);
   const [messages, setMessages] = useState<
     Array<{ text: string; isUser: boolean }>
   >([]);
-  // Store the first component’s key and the reward value
-  const [componentKey, setComponentKey] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [components, setComponents] = useState<any[]>([]);
   const [previewContent, setPreviewContent] = useState<React.ReactNode>(
     <div className="text-center text-gray-500">
       Your travel preview will appear here
     </div>
   );
+  const [logs, setLogs] = useState<string[]>([]);
+  const [isPreviewExpanded, setIsPreviewExpanded] = useState(false);
 
+  // Store the first component’s key and the reward value
+  const [componentKey, setComponentKey] = useState<string | null>(null);
+  const [reward, setReward] = useState<number>(0);
+
+  const { toast } = useToast();
+
+  // Updated handleSendMessage uses EventSource for streaming single component objects
   const handleSendMessage = (message: string) => {
     // Add the user's message to the chat history.
     setMessages((prev) => [...prev, { text: message, isUser: true }]);
@@ -69,6 +73,8 @@ export default function Home() {
           );
           return updatedComponents;
         });
+
+        // Add an assistant message indicating the travel plan is ready if not already added.
         setMessages((prev) => {
           const alreadyAdded = prev.some(
             (msg) => !msg.isUser && msg.text.includes("customized travel plan")
@@ -81,6 +87,7 @@ export default function Home() {
           }
           return prev;
         });
+
         // Update logs with the new component info.
         setLogs((prev) => [
           ...prev,
@@ -95,19 +102,62 @@ export default function Home() {
         console.error("Error parsing SSE data:", error);
       }
       // Optionally, you might setIsLoading(false) if your backend signals the end of the stream.
-    }
+    };
+
+    eventSource.onerror = (err) => {
+      console.error("EventSource error:", err);
+      setIsLoading(false);
+      eventSource.close();
+      toast({
+        title: "Error",
+        description: "Failed to process your request. Please try again.",
+        variant: "destructive",
+      });
+    };
+
+    // Optionally, you can close the connection when done.
   };
 
-    // eventSource.onerror = (err) => {
-    //   console.error("EventSource error:", err);
-    //   setIsLoading(false);
-    //   eventSource.close();
-    //   toast({
-    //     title: "Error",
-    //     description: "Failed to process your request. Please try again.",
-    //     variant: "destructive",
-    //   });
-    // };
+  // Handle submitting the reward
+  const handleRewardSubmit = async () => {
+    if (!componentKey) {
+      toast({
+        title: "No component key",
+        description: "Generate a travel plan first before submitting a reward.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:8000/reward", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          component_key: componentKey,
+          reward: reward,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to submit reward");
+      }
+
+      toast({
+        title: "Success",
+        description: "Reward submitted successfully!",
+      });
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "Error",
+        description: "Failed to submit reward",
+        variant: "destructive",
+      });
+    }
+  };
 
   const hasMessages = messages.length > 0;
 
@@ -140,7 +190,6 @@ export default function Home() {
               </p>
               <div className="w-full max-w-2xl mb-12">
                 <ChatInput onSend={handleSendMessage} disabled={isLoading} />
-                {/* <ChatInput onSend={handleSendMessage} disabled={isLoading} /> */}
               </div>
               <div className="flex flex-wrap justify-center gap-4">
                 {actionButtons.map((button, index) => (
@@ -158,7 +207,7 @@ export default function Home() {
             <>
               <div className="p-4 border-b border-gray-200">
                 <h1 className="text-xl font-bold text-travel-900">
-                  Travel Assistant
+                  Smart Travel Assistant
                 </h1>
               </div>
               <div className="flex-1 overflow-auto p-4">
@@ -169,12 +218,84 @@ export default function Home() {
                     isUser={msg.isUser}
                   />
                 ))}
+                {isLoading && <LoadingSpinner />}
               </div>
+              <ChatInput onSend={handleSendMessage} disabled={isLoading} />
             </>
           )}
         </div>
       </div>
+
+      {/* Preview Section */}
+      {hasMessages && !isPreviewExpanded && (
+        <div className="flex-1 p-4 animate-fade-in">
+          <PreviewSection
+            content={previewContent}
+            logs={logs}
+            onToggleFullscreen={() => setIsPreviewExpanded(true)}
+          />
+
+          {/* Reward Range Slider and Submit Button */}
+          <div className="mt-4 p-4 border rounded bg-white shadow-sm">
+            <label htmlFor="reward-range" className="font-semibold mr-2">
+              Reward (0 - 1.0): <span>{reward}</span>
+            </label>
+            <input
+              id="reward-range"
+              type="range"
+              min="0"
+              max="1"
+              step="0.1"
+              value={reward}
+              onChange={(e) => setReward(parseFloat(e.target.value))}
+              className="mx-4"
+            />
+            <button
+              onClick={handleRewardSubmit}
+              className="bg-travel-600 text-white px-4 py-2 rounded hover:bg-travel-700"
+            >
+              Submit Reward
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Expanded Preview */}
+      {isPreviewExpanded && (
+        <div className="w-full animate-fade-in">
+          <PreviewSection
+            content={previewContent}
+            logs={logs}
+            onToggleFullscreen={() => setIsPreviewExpanded(false)}
+          />
+
+          {/* Reward Range Slider and Submit Button for Expanded View */}
+          <div className="mt-4 p-4 border rounded bg-white shadow-sm">
+            <label
+              htmlFor="reward-range-expanded"
+              className="font-semibold mr-2"
+            >
+              Reward (0 - 1.0): <span>{reward}</span>
+            </label>
+            <input
+              id="reward-range-expanded"
+              type="range"
+              min="0"
+              max="1"
+              step="0.1"
+              value={reward}
+              onChange={(e) => setReward(parseFloat(e.target.value))}
+              className="mx-4"
+            />
+            <button
+              onClick={handleRewardSubmit}
+              className="bg-travel-600 text-white px-4 py-2 rounded hover:bg-travel-700"
+            >
+              Submit Reward
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
-

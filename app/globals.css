@@ -8,6 +8,674 @@ body {
 
 @layer base {
   :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+
     --radius: 0.5rem;
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+
+/* Hotel Card */
+
+.custom-wrapper {
+  display: flex;
+
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.card {
+  position: relative;
+  width: 320px;
+  height: 350px;
+  margin: 10px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+
+.card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.card .card-title {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 12px;
+  color: #ffffff;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.card .card-subtitle {
+  font-size: 0.875rem;
+  color: #6c757d;
+  margin-bottom: 12px;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.card-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 12px;
+  color: #ffffff;
+  background: rgba(0, 0, 0, 0.4);
+  /* Semi-transparent overlay */
+}
+
+.card-content h2 {
+  font-size: 1.4rem;
+  margin-bottom: 6px;
+}
+
+.card-content p {
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+
+
+/* itinerary */
+
+
+.itinerary-container {
+  max-width: 800px;
+  margin: 20px auto;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+}
+
+.itinerary-item {
+  display: flex;
+  padding: 20px;
+  margin-bottom: 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  position: relative;
+}
+
+.day-marker {
+  position: absolute;
+  left: -12px;
+  top: 20px;
+  background: #333;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.item-image {
+  width: 120px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-right: 20px;
+}
+
+.item-content {
+  flex: 1;
+}
+
+.item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.item-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+  color: #333;
+}
+
+.item-price {
+  font-weight: 600;
+  color: #333;
+}
+
+.item-details {
+  display: flex;
+  gap: 20px;
+  font-size: 14px;
+  color: #666;
+}
+
+.rating {
+  color: #ffd700;
+  margin-right: 5px;
+}
+
+.location {
+  color: #2196F3;
+}
+
+.tags {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.tag {
+  background: #f5f5f5;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #666;
+}
+
+.close-button {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  color: #999;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+/* Destination Styles */
+
+.destination {
+  width: 1000px;
+  height: 500px;
+  margin: 10px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.destination__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.destination__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg,
+      rgba(0, 0, 0, 0.7) 0%,
+      rgba(0, 0, 0, 0.4) 50%,
+      rgba(0, 0, 0, 0.1) 100%);
+  color: white;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.destination__content {
+  max-width: 600px;
+}
+
+.destination__title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  position: absolute;
+  right: 2rem;
+  bottom: 2rem;
+}
+
+.destination__heading {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+}
+
+.destination__description {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.destination__stats {
+  display: flex;
+  gap: 2rem;
+}
+
+
+.destination__stat-icon {
+  width: 24px;
+  height: 24px;
+  background: white;
+  border-radius: 50%;
+}
+
+.destination__stat-text {
+  font-size: 0.9rem;
+}
+
+/* Responsive Gallery Grid */
+.slider {
+  display: grid;
+  gap: 20px;
+  padding: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.slider-track {
+  display: flex;
+  justify-content: center;
+  margin-right: 10px;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  /* Initial fade-in animation */
+  animation: fadeIn 1.2s ease-in-out both;
+}
+
+/* Image Styling and Hover Animation */
+.slider-item img {
+  width: 100%;
+  padding: 2px;
+  display: block;
+  transition: transform 0.5s ease, filter 0.5s ease;
+}
+
+.slider-item:hover img {
+  transform: scale(1.08);
+  filter: brightness(85%);
+}
+
+.flight-card {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  max-width: 400px;
+  padding: 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.flight-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.flight-name {
+  font-size: 14px;
+  color: #333;
+  font-weight: 500;
+}
+
+.flight-description {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.flight-amount {
+  font-size: 24px;
+  font-weight: 600;
+  color: #000;
+  margin-bottom: 20px;
+}
+
+.actions {
+  display: flex;
+  gap: 15px;
+}
+
+.action-button {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 12px;
+  border: none;
+  background: none;
+  color: #666;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* weather */
+.weather-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.weather-card {
+  background: white;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.current-weather {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.temperature {
+  font-size: 48px;
+  font-weight: bold;
+  color: #1a1a1a;
+}
+
+.weather-info {
+  text-align: center;
+}
+
+.weather-icon {
+  font-size: 40px;
+  margin: 10px 0;
+}
+
+.weather-condition {
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.weather-details {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.detail-item {
+  flex: 1;
+  text-align: center;
+}
+
+.detail-label {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.detail-value {
+  font-weight: bold;
+  color: #1a1a1a;
+}
+
+.forecast {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 15px;
+}
+
+.forecast-item {
+  background: white;
+  border-radius: 10px;
+  padding: 15px;
+  text-align: center;
+}
+
+.forecast-day {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.forecast-temp {
+  font-size: 24px;
+  font-weight: bold;
+  color: #1a1a1a;
+  margin: 10px 0;
+}
+
+/* Cost */
+
+.cost-container {
+  width: 1200px;
+  margin-top: 10px;
+}
+
+.cost-card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #1a202c;
+}
+
+.total {
+  font-size: 28px;
+  font-weight: bold;
+  color: #2c5282;
+}
+
+.cost-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.cost-item {
+  padding: 16px;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.item-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.item-title {
+  font-weight: 600;
+  color: #4a5568;
+}
+
+.item-cost {
+  font-weight: bold;
+  color: #2c5282;
+}
+
+.item-details {
+  font-size: 14px;
+  color: #718096;
+}
+
+.breakdown {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px dashed #e2e8f0;
+}
+
+.breakdown-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.breakdown-label {
+  color: #718096;
+}
+
+.breakdown-value {
+  font-weight: 500;
+}
+
+.notes {
+  font-size: 14px;
+  color: #718096;
+  padding: 16px;
+  background: #f8fafc;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+@media (max-width: 600px) {
+  .forecast {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .current-weather {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .weather-details {
+    flex-wrap: wrap;
+  }
+
+  .detail-item {
+    flex: 0 0 50%;
+  }
+}
+
+/* Keyframes for the Fade-In Effect */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .destination-card__gallery {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .destination-card__general-info {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 576px) {
+  .destination-card__gallery {
+    grid-template-columns: 1fr;
+  }
+
+  .destination-card__general-info {
+    grid-template-columns: 1fr;
+  }
+
+  .destination-card__best-time {
+    flex-direction: column;
   }
 }

@@ -12,3 +12,12 @@ export interface ChatMessageProps {
       onClick: () => void;
     }>;
   }
+export interface PreviewSectionProps {
+  content: React.ReactNode;
+  logs: string[];
+  onToggleFullscreen: () => void;
+  
+  }
+
+
+ 
