@@ -9,21 +9,22 @@ export const ChatInput = ({
   onSend,
   disabled,
   placeholder = "e.g. I'm interested in planning a beach vacation in Mirissa...",
+  value,
+  onChange,
 }: ChatInputProps) => {
   const [message, setMessage] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (message.trim()) {
-      onSend(message);
-      setMessage("");
+    if (value.trim()) {
+      onSend(value);
     }
   };
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex gap-2 bg-gray-50 p-4 border-t border-gray-100"
+      className="flex gap-2 p-4 border-t border-gray-100"
     >
       <Button
         type="button"
@@ -35,8 +36,8 @@ export const ChatInput = ({
         <Paperclip className="h-4 w-4" />
       </Button>
       <Input
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
+        value={value}
+        onChange={onChange}
         placeholder={placeholder}
         className="flex-1 bg-gray-50"
         disabled={disabled}
@@ -53,7 +54,7 @@ export const ChatInput = ({
       <Button
         type="submit"
         size="icon"
-        disabled={disabled || !message.trim()}
+        disabled={disabled || !value.trim()}
         className="bg-travel-600 hover:bg-travel-700 text-white"
       >
         <SendHorizontal className="h-4 w-4" />

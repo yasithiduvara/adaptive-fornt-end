@@ -7,6 +7,7 @@ import { sanitizeHTML } from "@/lib/utils";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { PreviewSection } from "@/components/PreviewSection";
 import { useToast } from "@/components/ui/use-toast";
+import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 
 export default function Home() {
   const [messages, setMessages] = useState<
@@ -16,24 +17,36 @@ export default function Home() {
   const [components, setComponents] = useState<any[]>([]);
   const [previewContent, setPreviewContent] = useState<React.ReactNode>(
     <div className="text-center text-gray-500">
-      Your travel preview will appear here
+      <LoadingSkeleton />
     </div>
   );
   const [logs, setLogs] = useState<string[]>([]);
   const [isPreviewExpanded, setIsPreviewExpanded] = useState(false);
 
-  // Store the first component’s key and the reward value
+  // Store the first component's key and the reward value
   const [componentKey, setComponentKey] = useState<string | null>(null);
   const [reward, setReward] = useState<number>(0);
+
+  // Add new state for input text
+  const [inputText, setInputText] = useState("");
 
   const { toast } = useToast();
 
   // Updated handleSendMessage uses EventSource for streaming single component objects
   const handleSendMessage = (message: string) => {
+    // Clear input after sending
+    setInputText("");
     // Add the user's message to the chat history.
     setMessages((prev) => [...prev, { text: message, isUser: true }]);
     setIsLoading(true);
-    setComponents([]); // Clear previous components
+    setComponents([]);
+    setPreviewContent(
+      <div className="text-center text-gray-500">
+        <div className="m-12">
+          <LoadingSkeleton />
+        </div>
+      </div>
+    );
 
     // Create an EventSource using the streaming endpoint with the query parameter.
     const url = `http://localhost:8000/stream-travel-assistant?user_query=${encodeURIComponent(
@@ -47,6 +60,13 @@ export default function Home() {
 
     eventSource.onmessage = (event) => {
       try {
+        // Check for end of stream signal
+        if (event.data === "[DONE]") {
+          setIsLoading(false);
+          eventSource.close();
+          return;
+        }
+
         // Each SSE message is assumed to be a single component object.
         const newComponent = JSON.parse(event.data);
 
@@ -66,6 +86,7 @@ export default function Home() {
                     // Use sanitizeHTML to safely inject raw HTML.
                     dangerouslySetInnerHTML={sanitizeHTML(component.html)}
                   />
+
                   {component.css && <style>{component.css}</style>}
                 </div>
               ))}
@@ -106,7 +127,7 @@ export default function Home() {
 
     eventSource.onerror = (err) => {
       console.error("EventSource error:", err);
-      setIsLoading(false);
+      setIsLoading(false); // Ensure loading state is cleared on error
       eventSource.close();
       toast({
         title: "Error",
@@ -184,17 +205,23 @@ export default function Home() {
         <div className="flex flex-col h-full">
           {!hasMessages ? (
             <div className="flex-1 flex flex-col items-center justify-center p-8">
-              <h1 className="text-4xl font-bold mb-4">Hey There! 👋</h1>
+              <h1 className="text-4xl font-bold mb-4">Smart Travel Assistant 🌴</h1>
               <p className="text-xl text-gray-600 mb-12">
                 Where would you like to go?
               </p>
               <div className="w-full max-w-2xl mb-12">
-                <ChatInput onSend={handleSendMessage} disabled={isLoading} />
+                <ChatInput
+                  onSend={() => handleSendMessage(inputText)}
+                  disabled={isLoading}
+                  value={inputText}
+                  onChange={(e) => setInputText(e.target.value)}
+                />
               </div>
               <div className="flex flex-wrap justify-center gap-4">
                 {actionButtons.map((button, index) => (
                   <button
                     key={index}
+                    onClick={() => setInputText(button.label)}
                     className="flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-gray-200 hover:bg-gray-50 transition-colors"
                   >
                     <button.icon className="w-5 h-5 text-travel-600" />
@@ -220,7 +247,12 @@ export default function Home() {
                 ))}
                 {isLoading && <LoadingSpinner />}
               </div>
-              <ChatInput onSend={handleSendMessage} disabled={isLoading} />
+              <ChatInput
+                onSend={() => handleSendMessage(inputText)}
+                disabled={isLoading}
+                value={inputText}
+                onChange={(e) => setInputText(e.target.value)}
+              />
             </>
           )}
         </div>
