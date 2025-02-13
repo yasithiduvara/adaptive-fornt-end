@@ -50,7 +50,7 @@ export default function Home() {
     );
 
     // Create an EventSource using the streaming endpoint with the query parameter.
-    const url = `http://induvaray-w10vm.codegen.net:8000/stream-travel-assistant?user_query=${encodeURIComponent(
+    const url = `http://localhost:8000/stream-travel-assistant?user_query=${encodeURIComponent(
       message
     )}`;
     const eventSource = new EventSource(url, {
