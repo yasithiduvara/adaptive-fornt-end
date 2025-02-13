@@ -1,5 +1,4 @@
 "use client";
-import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { SendHorizontal, Mic, Paperclip } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -12,7 +11,6 @@ export const ChatInput = ({
   value,
   onChange,
 }: ChatInputProps) => {
-  const [message, setMessage] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

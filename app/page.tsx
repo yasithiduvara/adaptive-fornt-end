@@ -8,19 +8,20 @@ import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { PreviewSection } from "@/components/PreviewSection";
 import { useToast } from "@/components/ui/use-toast";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
+import { TravelComponent } from "@/types/chat";
 
 export default function Home() {
   const [messages, setMessages] = useState<
     Array<{ text: string; isUser: boolean }>
   >([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [components, setComponents] = useState<any[]>([]);
+  const [, setComponents] = useState<TravelComponent[]>([]);
   const [previewContent, setPreviewContent] = useState<React.ReactNode>(
     <div className="text-center text-gray-500">
       <LoadingSkeleton />
     </div>
   );
-  const [logs, setLogs] = useState<string[]>([]);
+  const [logs] = useState<string[]>([]);
   const [isPreviewExpanded, setIsPreviewExpanded] = useState(false);
 
   // Store the first component's key and the reward value
@@ -49,10 +50,24 @@ export default function Home() {
     );
 
     // Create an EventSource using the streaming endpoint with the query parameter.
-    const url = `http://localhost:8000/stream-travel-assistant?user_query=${encodeURIComponent(
+    const url = `http://induvaray-w10vm.codegen.net:8000/stream-travel-assistant?user_query=${encodeURIComponent(
       message
     )}`;
-    const eventSource = new EventSource(url);
+    const eventSource = new EventSource(url, {
+      withCredentials: true,
+    });
+
+    // Add explicit error handler
+    eventSource.addEventListener("error", (err) => {
+      console.error("EventSource failed:", err);
+      setIsLoading(false);
+      eventSource.close();
+      toast({
+        title: "Connection Error",
+        description: "Failed to connect to the travel assistant",
+        variant: "destructive",
+      });
+    });
 
     eventSource.onopen = () => {
       console.log("EventSource connection opened.");
@@ -60,80 +75,53 @@ export default function Home() {
 
     eventSource.onmessage = (event) => {
       try {
-        // Check for end of stream signal
         if (event.data === "[DONE]") {
           setIsLoading(false);
           eventSource.close();
           return;
         }
 
-        // Each SSE message is assumed to be a single component object.
-        const newComponent = JSON.parse(event.data);
+        // Try parsing the data
+        let newComponent: TravelComponent;
+        try {
+          newComponent = JSON.parse(event.data) as TravelComponent;
+        } catch (error) {
+          console.error("Failed to parse event data:", event.data, error);
+          return; // Skip this message
+        }
 
-        // Append the new component to our state.
-        setComponents((prev) => {
+        // Proceed with updating the state
+        setComponents((prev: TravelComponent[]) => {
           const updatedComponents = [...prev, newComponent];
-          // Update the preview content based on the updated components list.
+
+          // Set component key if it's the first component
+          if (!componentKey && updatedComponents.length > 0) {
+            setComponentKey(updatedComponents[0].component_key);
+          }
+
           setPreviewContent(
             <div className="space-y-8 flex flex-wrap justify-center">
-              {updatedComponents.map((component: any, index: number) => (
-                <div
-                  key={`${component.component_key}-${index}`}
-                  className="flex flex-wrap justify-center bg-white p-6 rounded-lg shadow-md"
-                >
+              {updatedComponents.map(
+                (component: TravelComponent, index: number) => (
                   <div
-                    className="flex flex-wrap justify-center"
-                    // Use sanitizeHTML to safely inject raw HTML.
-                    dangerouslySetInnerHTML={sanitizeHTML(component.html)}
-                  />
-
-                  {component.css && <style>{component.css}</style>}
-                </div>
-              ))}
+                    key={`${component.component_key}-${index}`}
+                    className="flex flex-wrap justify-center bg-white p-6 rounded-lg shadow-md"
+                  >
+                    <div
+                      className="flex flex-wrap justify-center"
+                      dangerouslySetInnerHTML={sanitizeHTML(component.html)}
+                    />
+                    {component.css && <style>{component.css}</style>}
+                  </div>
+                )
+              )}
             </div>
           );
           return updatedComponents;
         });
-
-        // Add an assistant message indicating the travel plan is ready if not already added.
-        setMessages((prev) => {
-          const alreadyAdded = prev.some(
-            (msg) => !msg.isUser && msg.text.includes("customized travel plan")
-          );
-          if (!alreadyAdded) {
-            return [
-              ...prev,
-              { text: "Here's your customized travel plan:", isUser: false },
-            ];
-          }
-          return prev;
-        });
-
-        // Update logs with the new component info.
-        setLogs((prev) => [
-          ...prev,
-          `Generated component: ${
-            newComponent.component_key
-          } (q: ${newComponent.q_value.toFixed(2)})`,
-        ]);
-
-        // Save the first component key (if not set) for reward submission.
-        setComponentKey((prev) => prev || newComponent.component_key);
-      } catch (error) {
-        console.error("Error parsing SSE data:", error);
+      } catch (error: unknown) {
+        console.error("Error handling SSE message:", error);
       }
-      // Optionally, you might setIsLoading(false) if your backend signals the end of the stream.
-    };
-
-    eventSource.onerror = (err) => {
-      console.error("EventSource error:", err);
-      setIsLoading(false); // Ensure loading state is cleared on error
-      eventSource.close();
-      toast({
-        title: "Error",
-        description: "Failed to process your request. Please try again.",
-        variant: "destructive",
-      });
     };
 
     // Optionally, you can close the connection when done.
@@ -205,7 +193,9 @@ export default function Home() {
         <div className="flex flex-col h-full">
           {!hasMessages ? (
             <div className="flex-1 flex flex-col items-center justify-center p-8">
-              <h1 className="text-4xl font-bold mb-4">Smart Travel Assistant 🌴</h1>
+              <h1 className="text-4xl font-bold mb-4">
+                Smart Travel Assistant 🌴
+              </h1>
               <p className="text-xl text-gray-600 mb-12">
                 Where would you like to go?
               </p>

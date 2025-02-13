@@ -1,5 +1,4 @@
 "use client";
-import React, { useState } from "react";
 import { ChatMessageProps } from "@/types/chat";
 
 export const ChatMessage = ({ message, isUser, actions }: ChatMessageProps) => {

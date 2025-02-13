@@ -22,4 +22,8 @@ export interface PreviewSectionProps {
   }
 
 
- 
+  export interface TravelComponent {
+    component_key: string;
+    html: string;
+    css?: string;
+  }
