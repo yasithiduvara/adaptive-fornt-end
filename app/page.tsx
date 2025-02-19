@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Map, Building2, MapPin, Landmark, Calendar } from "lucide-react";
 import { ChatInput } from "@/components/ChatInput";
 import { ChatMessage } from "@/components/ChatMessage";
@@ -31,7 +31,63 @@ export default function Home() {
   // Add new state for input text
   const [inputText, setInputText] = useState("");
 
+  // Add prompt suggestions mapping
+  const PROMPT_SUGGESTIONS = {
+    "Explore places": [
+      "Explore places that inspire creativity and fuel your imagination",
+      "Explore places off the beaten path for hidden gems and unforgettable experiences",
+      "Explore places where history meets modern charm, creating a perfect blend of past and present",
+    ],
+    "Suggest Hotels": [
+      "Suggest Hotels Japan beachside",
+      "Suggest Hotels Unawatuna",
+      "Suggest Hotels budget friendly in Sri Lanka",
+    ],
+    Itineraries: [
+      "Show me itinerary for a budget-friendly adventure",
+      "Show me itinerary for a family-friendly holiday",
+      "Show me itinerary for a romantic getaway",
+    ],
+    "Things to Do": [
+      "Things to Do in Sri Lanka",
+      "Things to Do in Unawatuna Beach",
+      "Things to Do in Dubai",
+    ],
+  };
+
+  // Add type for PROMPT_SUGGESTIONS keys
+  type PromptKey = keyof typeof PROMPT_SUGGESTIONS;
+
+  // Update actionButtons structure
+  const actionButtons = [
+    { icon: Map, label: "Explore places", promptKey: "Explore places" },
+    { icon: Building2, label: "Suggest Hotels", promptKey: "Suggest Hotels" },
+    { icon: MapPin, label: "Itineraries", promptKey: "Itineraries" },
+    { icon: Landmark, label: "Things to Do", promptKey: "Things to Do" },
+  ];
+
+  // Update state type declaration
+  const [selectedPromptType, setSelectedPromptType] =
+    useState<PromptKey | null>(null);
+
   const { toast } = useToast();
+
+  const suggestionsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        selectedPromptType &&
+        suggestionsRef.current &&
+        !suggestionsRef.current.contains(event.target as Node)
+      ) {
+        setSelectedPromptType(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [selectedPromptType]);
 
   // Updated handleSendMessage uses EventSource for streaming single component objects
   const handleSendMessage = (message: string) => {
@@ -50,7 +106,7 @@ export default function Home() {
     );
 
     // Create an EventSource using the streaming endpoint with the query parameter.
-    const url = `http://localhost:8000/stream-travel-assistant?user_query=${encodeURIComponent(
+    const url = `http://localhost:8000/travel/stream-travel-assistant?user_query=${encodeURIComponent(
       message
     )}`;
     const eventSource = new EventSource(url, {
@@ -100,15 +156,14 @@ export default function Home() {
           }
 
           setPreviewContent(
-            <div className="space-y-8 flex flex-wrap justify-center">
+            <div className="space-y-8 flex-row justify-center">
               {updatedComponents.map(
                 (component: TravelComponent, index: number) => (
                   <div
                     key={`${component.component_key}-${index}`}
-                    className="flex flex-wrap justify-center bg-white p-6 rounded-lg shadow-md"
+                    className=" flex justify-center items-center bg-white p-6 rounded-lg shadow-md"
                   >
                     <div
-                      className="flex flex-wrap justify-center"
                       dangerouslySetInnerHTML={sanitizeHTML(component.html)}
                     />
                     {component.css && <style>{component.css}</style>}
@@ -139,7 +194,7 @@ export default function Home() {
     }
 
     try {
-      const response = await fetch("http://localhost:8000/reward", {
+      const response = await fetch("http://localhost:8000/reward/update", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -170,14 +225,6 @@ export default function Home() {
 
   const hasMessages = messages.length > 0;
 
-  const actionButtons = [
-    { icon: Map, label: "Explore places" },
-    { icon: Building2, label: "Suggest Hotels" },
-    { icon: MapPin, label: "Itineraries" },
-    { icon: Landmark, label: "Things to Do" },
-    { icon: Calendar, label: "My Bookings" },
-  ];
-
   return (
     <div className="flex h-screen justify-center bg-gray-50">
       {/* Chat Section */}
@@ -199,7 +246,7 @@ export default function Home() {
               <p className="text-xl text-gray-600 mb-12">
                 Where would you like to go?
               </p>
-              <div className="w-full max-w-2xl mb-12">
+              <div className="w-full max-w-2xl mb-5">
                 <ChatInput
                   onSend={() => handleSendMessage(inputText)}
                   disabled={isLoading}
@@ -208,16 +255,47 @@ export default function Home() {
                 />
               </div>
               <div className="flex flex-wrap justify-center gap-4">
-                {actionButtons.map((button, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setInputText(button.label)}
-                    className="flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-gray-200 hover:bg-gray-50 transition-colors"
-                  >
-                    <button.icon className="w-5 h-5 text-travel-600" />
-                    <span className="text-sm">{button.label}</span>
-                  </button>
-                ))}
+                {!selectedPromptType &&
+                  actionButtons.map((button, index) => (
+                    <button
+                      key={index}
+                      onClick={() => {
+                        setInputText(button.label);
+                        setSelectedPromptType((prev) =>
+                          prev === button.promptKey
+                            ? null
+                            : (button.promptKey as PromptKey)
+                        );
+                      }}
+                      className="flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-gray-200 hover:bg-gray-50 transition-colors"
+                    >
+                      <button.icon className="w-5 h-5 text-travel-600" />
+                      <span className="text-sm">{button.label}</span>
+                    </button>
+                  ))}
+
+                {selectedPromptType && (
+                  <div ref={suggestionsRef} className="w-full max-w-2xl mt-4">
+                    <div className="grid grid-cols-1 gap-2 p-4 bg-gray-50 rounded-lg overflow-hidden">
+                      {PROMPT_SUGGESTIONS[selectedPromptType as PromptKey]?.map(
+                        (prompt, index) => (
+                          <button
+                            key={index}
+                            onClick={() => {
+                              handleSendMessage(prompt);
+                              setSelectedPromptType(null);
+                            }}
+                            className="animate-fadeInUp text-left p-3 hover:bg-gray-100 rounded-md transition-colors text-sm text-gray-700"
+                            style={{ animationDelay: `${index * 0.1}s` }}
+                          >
+                            <span className="font-medium">{index + 1}.</span>{" "}
+                            {prompt}
+                          </button>
+                        )
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           ) : (
