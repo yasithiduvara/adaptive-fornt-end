@@ -2,24 +2,23 @@ import { Map, Building2, MapPin, Landmark } from "lucide-react";
 
 export const PROMPT_SUGGESTIONS = {
   "Explore places": [
-    "Explore places that inspire creativity and fuel your imagination",
-    "Explore places off the beaten path for hidden gems and unforgettable experiences",
-    "Explore places where history meets modern charm, creating a perfect blend of past and present",
+    "that inspire creativity and fuel your imagination",
+    "off the beaten path for hidden gems and unforgettable experiences",
   ],
   "Suggest Hotels": [
-    "Suggest Hotels Japan beachside",
-    "Suggest Hotels Unawatuna",
-    "Suggest Hotels budget friendly in Sri Lanka",
+    "Japan beachside",
+    "Unawatuna beach and also provide me some imeges of the beach side and activities to do in beach",
+    "budget friendly in Sri Lanka",
   ],
   Itineraries: [
-    "Show me itinerary for a budget-friendly adventure",
-    "Show me itinerary for a family-friendly holiday",
-    "Show me itinerary for a romantic getaway",
+    "for a budget-friendly adventure",
+    "for a family-friendly holiday",
+    "for a romantic getaway",
   ],
   "Things to Do": [
-    "Things to Do in Sri Lanka",
-    "Things to Do in Unawatuna Beach",
-    "Things to Do in Dubai",
+    "in Sri Lanka",
+    "in Unawatuna Beach",
+    "in Dubai",
   ],
 } as const;
 

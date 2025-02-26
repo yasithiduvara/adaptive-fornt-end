@@ -14,6 +14,8 @@ import {
   actionButtons,
   PromptKey,
 } from "@/constants/travelPrompts";
+import gsap from "gsap";
+import { animateIn, animateOut } from "@/lib/animations";
 
 export default function Home() {
   const [messages, setMessages] = useState<
@@ -40,18 +42,26 @@ export default function Home() {
   const [selectedPromptType, setSelectedPromptType] =
     useState<PromptKey | null>(null);
 
+  // Add state to track the last user query
+  const [lastUserQuery, setLastUserQuery] = useState<string>("");
+
   const { toast } = useToast();
 
   const suggestionsRef = useRef<HTMLDivElement>(null);
+
+  // Add ref for suggestions container
+  const suggestionsContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
         selectedPromptType &&
-        suggestionsRef.current &&
-        !suggestionsRef.current.contains(event.target as Node)
+        suggestionsContainerRef.current &&
+        !suggestionsContainerRef.current.contains(event.target as Node)
       ) {
-        setSelectedPromptType(null);
+        animateOut(suggestionsContainerRef.current, () => {
+          setSelectedPromptType(null);
+        });
       }
     };
 
@@ -59,8 +69,15 @@ export default function Home() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [selectedPromptType]);
 
+  useEffect(() => {
+    if (selectedPromptType && suggestionsContainerRef.current) {
+      animateIn(suggestionsContainerRef.current);
+    }
+  }, [selectedPromptType]);
+
   // Updated handleSendMessage uses EventSource for streaming single component objects
   const handleSendMessage = (message: string) => {
+    setLastUserQuery(message); // Store the user's query
     // Clear input after sending
     setInputText("");
     // Add the user's message to the chat history.
@@ -131,7 +148,7 @@ export default function Home() {
                 (component: TravelComponent, index: number) => (
                   <div
                     key={`${component.component_key}-${index}`}
-                    className=" flex justify-center items-center bg-white p-6 rounded-lg shadow-md"
+                    className=" flex justify-center items-center"
                   >
                     <div
                       dangerouslySetInnerHTML={sanitizeHTML(component.html)}
@@ -163,31 +180,51 @@ export default function Home() {
       return;
     }
 
+    if (!lastUserQuery) {
+      toast({
+        title: "Missing user query",
+        description: "No user query found to submit with reward.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
       const response = await fetch("http://localhost:8000/reward/update", {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          Accept: "application/json",
         },
         body: JSON.stringify({
           component_key: componentKey,
           reward: reward,
+          user_query: lastUserQuery, // Add the user query to the request
         }),
       });
 
       if (!response.ok) {
-        throw new Error("Failed to submit reward");
+        const errorData = await response.text();
+        console.error("Server response:", errorData);
+        throw new Error(
+          `Failed to submit reward: ${response.status} ${response.statusText}`
+        );
       }
+
+      const data = await response.json();
+      console.log("Reward submission successful:", data);
 
       toast({
         title: "Success",
         description: "Reward submitted successfully!",
       });
     } catch (error) {
-      console.error(error);
+      console.error("Reward submission error:", error);
       toast({
         title: "Error",
-        description: "Failed to submit reward",
+        description:
+          error instanceof Error ? error.message : "Failed to submit reward",
         variant: "destructive",
       });
     }
@@ -203,7 +240,7 @@ export default function Home() {
           isPreviewExpanded
             ? "hidden"
             : hasMessages
-            ? "w-1/3 border-r border-gray-200"
+            ? "w-[32%] border-r border-gray-200"
             : "w-full"
         }`}
       >
@@ -216,7 +253,9 @@ export default function Home() {
               <p className="text-xl text-gray-600 mb-12">
                 Where would you like to go?
               </p>
-              <div className="w-full max-w-2xl mb-5">
+
+              {/* Fixed position container for ChatInput */}
+              <div className="w-full max-w-2xl mb-5 relative z-10">
                 <ChatInput
                   onSend={() => handleSendMessage(inputText)}
                   disabled={isLoading}
@@ -224,44 +263,62 @@ export default function Home() {
                   onChange={(e) => setInputText(e.target.value)}
                 />
               </div>
-              <div className="flex flex-wrap justify-center gap-4">
-                {!selectedPromptType &&
-                  actionButtons.map((button, index) => (
-                    <button
-                      key={index}
-                      onClick={() => {
-                        setInputText(button.label);
-                        setSelectedPromptType((prev) =>
-                          prev === button.promptKey
-                            ? null
-                            : (button.promptKey as PromptKey)
-                        );
-                      }}
-                      className="flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-gray-200 hover:bg-gray-50 transition-colors"
-                    >
-                      <button.icon className="w-5 h-5 text-travel-600" />
-                      <span className="text-sm">{button.label}</span>
-                    </button>
-                  ))}
+
+              {/* Updated suggestions and buttons container */}
+              <div className="relative w-full max-w-2xl">
+                <div className="flex flex-wrap justify-center gap-4">
+                  {!selectedPromptType &&
+                    actionButtons.map((button, index) => (
+                      <button
+                        key={index}
+                        onClick={() => {
+                          setInputText(button.label);
+                          setSelectedPromptType((prev) =>
+                            prev === button.promptKey
+                              ? null
+                              : (button.promptKey as PromptKey)
+                          );
+                        }}
+                        className="flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-gray-200 hover:bg-gray-50 transition-colors"
+                      >
+                        <button.icon className="w-5 h-5 text-travel-600" />
+                        <span className="text-sm">{button.label}</span>
+                      </button>
+                    ))}
+                </div>
 
                 {selectedPromptType && (
-                  <div ref={suggestionsRef} className="w-full max-w-2xl mt-4">
-                    <div className="grid grid-cols-1 gap-2 p-4 bg-gray-50 rounded-lg overflow-hidden">
+                  <div
+                    ref={suggestionsContainerRef}
+                    className="absolute top-[-3] left-0 w-[full] bg-white rounded-lg shadow-lg border border-gray-200 mt-2"
+                  >
+                    <div className="py-1">
                       {PROMPT_SUGGESTIONS[selectedPromptType as PromptKey]?.map(
-                        (prompt, index) => (
-                          <button
-                            key={index}
-                            onClick={() => {
-                              handleSendMessage(prompt);
-                              setSelectedPromptType(null);
-                            }}
-                            className="animate-fadeInUp text-left p-3 hover:bg-gray-100 rounded-md transition-colors text-sm text-gray-700"
-                            style={{ animationDelay: `${index * 0.1}s` }}
-                          >
-                            <span className="font-medium">{index + 1}.</span>{" "}
-                            {prompt}
-                          </button>
-                        )
+                        (prompt, index) => {
+                          // Find the corresponding button for the selected prompt type
+                          const currentButton = actionButtons.find(
+                            (btn) => btn.promptKey === selectedPromptType
+                          );
+
+                          return (
+                            <button
+                              key={index}
+                              onClick={() => {
+                                const fullPrompt = `${currentButton?.label} ${prompt}`;
+                                handleSendMessage(fullPrompt);
+                                setSelectedPromptType(null);
+                              }}
+                              className="w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors flex items-center gap-3"
+                            >
+                              <span className="text-gray-400 text-sm">
+                                {currentButton?.label}
+                              </span>
+                              <span className="text-gray-900 text-sm">
+                                {prompt}
+                              </span>
+                            </button>
+                          );
+                        }
                       )}
                     </div>
                   </div>
@@ -298,7 +355,7 @@ export default function Home() {
 
       {/* Preview Section */}
       {hasMessages && !isPreviewExpanded && (
-        <div className="flex-1 p-4 animate-fade-in">
+        <div className="flex-1 p-4 animate-fade-in ">
           <PreviewSection
             content={previewContent}
             logs={logs}

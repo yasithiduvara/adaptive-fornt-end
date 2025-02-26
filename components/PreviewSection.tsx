@@ -25,7 +25,7 @@ export const PreviewSection = ({
   };
 
   return (
-    <div className="relative bg-white rounded-lg shadow-lg transition-all duration-300 h-full">
+    <div className="relative bg-[#F0F8FF] rounded-lg shadow-lg transition-all duration-300 h-full">
       <div className="absolute top-4 right-4 flex gap-2 z-10">
         <Dialog>
           <DialogTrigger asChild>
