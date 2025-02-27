@@ -18,8 +18,11 @@ export interface PreviewSectionProps {
   content: React.ReactNode;
   logs: string[];
   onToggleFullscreen: () => void;
-  
-  }
+  reward: number;
+  onRewardChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onRewardSubmit: () => void;
+  isFullscreen: boolean;
+}
 
 
   export interface TravelComponent {
