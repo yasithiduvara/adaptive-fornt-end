@@ -19,7 +19,7 @@ export interface PreviewSectionProps {
   logs: string[];
   onToggleFullscreen: () => void;
   reward: number;
-  onRewardChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onRewardChange: (value: number) => void; 
   onRewardSubmit: () => void;
   isFullscreen: boolean;
 }
@@ -29,4 +29,5 @@ export interface PreviewSectionProps {
     component_key: string;
     html: string;
     css?: string;
+    description: string;
   }

@@ -31,7 +31,7 @@ export const PreviewSection = ({
         <Dialog>
           <DialogTrigger asChild>
             <Button variant="outline" size="icon">
-              <Terminal className="h-4 w-4" />
+              <div className="h-4 w-4">⭐</div>
             </Button>
           </DialogTrigger>
           <DialogContent>
@@ -71,9 +71,7 @@ export const PreviewSection = ({
                   ].map((item) => (
                     <button
                       key={item.value}
-                      onClick={() =>
-                        onRewardChange({ target: { value: item.value } })
-                      }
+                      onClick={() => onRewardChange(item.value)}
                       className={`text-3xl p-2 rounded-full transition-all duration-200 ${
                         reward === item.value
                           ? "bg-travel-100 transform scale-125"

@@ -102,11 +102,18 @@ export default function Home() {
             <div className="space-y-8 flex-row justify-center">
               {updatedComponents.map(
                 (component: TravelComponent, index: number) => (
-                  <div
-                    key={`${component.component_key}-${index}`}
-                    className=" flex justify-center items-center"
-                  >
+                  <div key={`${component.component_key}-${index}`} className="">
+                    <div className="p-3">
+                      <h2 className="text-4xl font-bold ">
+                        {component.component_key}
+                      </h2>
+                      <p className="text-gray-500 text-xs px-4 pt-2">
+                        {component.description}
+                      </p>
+                    </div>
+
                     <div
+                      className=" flex justify-center items-center"
                       dangerouslySetInnerHTML={sanitizeHTML(component.html)}
                     />
                     {component.css && <style>{component.css}</style>}
@@ -298,7 +305,7 @@ export default function Home() {
             logs={logs}
             onToggleFullscreen={() => setIsPreviewExpanded((prev) => !prev)}
             reward={reward}
-            onRewardChange={(e) => setReward(parseFloat(e.target.value))}
+            onRewardChange={(newValue: number) => setReward(newValue)}
             onRewardSubmit={handleRewardSubmit}
             isFullscreen={isPreviewExpanded}
           />
@@ -313,7 +320,7 @@ export default function Home() {
             logs={logs}
             onToggleFullscreen={() => setIsPreviewExpanded((prev) => !prev)}
             reward={reward}
-            onRewardChange={(e) => setReward(parseFloat(e.target.value))}
+            onRewardChange={(newValue: number) => setReward(newValue)}
             onRewardSubmit={handleRewardSubmit}
             isFullscreen={isPreviewExpanded}
           />
