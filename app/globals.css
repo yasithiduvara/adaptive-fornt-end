@@ -678,12 +678,12 @@ body {
 
 .details {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  grid-template-columns: repeat(3, 160px);
+  gap: 8px;
   position: absolute;
-  bottom: 30px;
-  right: 30px;
-  width: 65%;
+  bottom: 15px;
+  right: 20px;
+  width: 500px;
 }
 
 .detail-row {
@@ -704,7 +704,10 @@ body {
 .detail-value {
   color: #0f172a;
   font-weight: 600;
-  font-size: 16px;
+  font-size: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 /* weather */
