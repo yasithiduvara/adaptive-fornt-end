@@ -15,6 +15,7 @@ import {
 } from "@/constants/travelPrompts";
 import { animateIn, animateOut } from "@/lib/animations";
 import { streamTravelComponents, submitReward } from "./services/travelService";
+import { TravelComponentPreview } from "@/components/TravelComponentPreview";
 
 export default function Home() {
   const [messages, setMessages] = useState<
@@ -33,6 +34,15 @@ export default function Home() {
   // Store the first component's key and the reward value
   const [componentKey, setComponentKey] = useState<string | null>(null);
   const [reward, setReward] = useState<number>(0);
+
+  const [globalVariant, setGlobalVariant] = useState<"html_1" | "html_2">(
+    "html_1"
+  );
+
+  // Helper function to toggle
+  const handleGlobalToggle = () => {
+    setGlobalVariant((prev) => (prev === "html_1" ? "html_2" : "html_1"));
+  };
 
   // Add new state for input text
   const [inputText, setInputText] = useState("");
@@ -99,25 +109,13 @@ export default function Home() {
           if (!componentKey)
             setComponentKey(updatedComponents[0].component_key);
           setPreviewContent(
-            <div className="space-y-8 flex-row justify-center">
+            <div className="space-y-8 flex-col justify-center">
               {updatedComponents.map(
                 (component: TravelComponent, index: number) => (
-                  <div key={`${component.component_key}-${index}`} className="">
-                    <div className="p-3">
-                      <h2 className="text-4xl font-bold ">
-                        {component.component_key}
-                      </h2>
-                      <p className="text-gray-500 text-xs px-4 pt-2">
-                        {component.description}
-                      </p>
-                    </div>
-
-                    <div
-                      className=" flex justify-center items-center"
-                      dangerouslySetInnerHTML={sanitizeHTML(component.html)}
-                    />
-                    {component.css && <style>{component.css}</style>}
-                  </div>
+                  <TravelComponentPreview
+                    key={`${component.component_key}-${index}`}
+                    component={component}
+                  />
                 )
               )}
             </div>
@@ -179,6 +177,7 @@ export default function Home() {
   return (
     <div className="flex h-screen justify-center bg-gray-50 ">
       {/* Chat Section */}
+
       <div
         className={`transition-all duration-300 ease-in-out bg-white  ${
           isPreviewExpanded

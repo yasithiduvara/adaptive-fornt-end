@@ -1,0 +1,104 @@
+/* Responsive Gallery Grid */
+.slider {
+    display: grid;
+    gap: 20px;
+    padding: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+  
+  .slider-track {
+    display: flex;
+    justify-content: center;
+    margin-right: 10px;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    /* Initial fade-in animation */
+    animation: fadeIn 1.2s ease-in-out both;
+  }
+  
+  /* Image Styling and Hover Animation */
+  .gallery-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    grid-gap: 10px;
+    height: 600px;
+  }
+  
+  .gallery-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+  
+  .gallery-item:hover img {
+    transform: scale(1.05);
+  }
+  
+  /* First item (map) spans entire left column */
+  .gallery-item:nth-child(1) {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    height: 100%;
+  }
+  
+  /* Right side images in a 2x2 grid */
+  .gallery-item:nth-child(2) {
+    grid-column: 2;
+    grid-row: 1;
+    height: 100%;
+  }
+  
+  .gallery-item:nth-child(3) {
+    grid-column: 2;
+    grid-row: 2;
+    height: 100%;
+  }
+  
+  .gallery-item:nth-child(4) {
+    display: none;
+    /* Hide the fourth item since the layout in image 2 only shows 3 items */
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .gallery-container {
+      grid-template-columns: 1fr;
+      height: auto;
+    }
+  
+    .gallery-item:nth-child(1) {
+      grid-column: 1;
+      grid-row: 1;
+      height: 300px;
+    }
+  
+    .gallery-item:nth-child(2),
+    .gallery-item:nth-child(3) {
+      grid-column: 1;
+      height: 300px;
+    }
+  
+    .gallery-item:nth-child(2) {
+      grid-row: 2;
+    }
+  
+    .gallery-item:nth-child(3) {
+      grid-row: 3;
+    }
+  }
+  

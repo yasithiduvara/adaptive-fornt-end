@@ -1,0 +1,300 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height: 1.6;
+    background-color: #f0f2f5;
+    color: #212529;
+}
+
+.emg-container {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.emg-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.emg-hed {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #212529;
+    margin-bottom: 15px;
+    position: relative;
+    display: inline-block;
+}
+
+.emg-hed::after {
+    content: "";
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: #ff3a5e;
+    border-radius: 2px;
+}
+
+.emg-hero-text {
+    font-size: 1.1rem;
+    color: #6c757d;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.emg-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    margin-bottom: 40px;
+}
+
+.emg-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.emg-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.06);
+}
+
+.emg-card-header {
+    padding: 20px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+}
+
+.emg-card-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin-right: 15px;
+    color: white;
+    font-size: 1.2rem;
+}
+
+.emg-emergency .emg-card-icon {
+    background-color: #ff3a5e;
+}
+
+.emg-hospitals .emg-card-icon {
+    background-color: #4cc9f0;
+}
+
+.emg-embassy .emg-card-icon {
+    background-color: #38b000;
+}
+
+.emg-advisory .emg-card-icon {
+    background-color: #ffbe0b;
+}
+
+.emg-tips .emg-card-icon {
+    background-color: #3a86ff;
+}
+
+.emg-card h2 {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+.emg-card-body {
+    padding: 20px;
+}
+
+.emg-emergency-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.emg-emergency-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 15px;
+    border-radius: 8px;
+    background-color: rgba(255, 58, 94, 0.05);
+    transition: all 0.3s ease;
+}
+
+.emg-emergency-item:hover {
+    background-color: rgba(255, 58, 94, 0.1);
+}
+
+.emg-emergency-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 5px;
+}
+
+.emg-emergency-number {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #ff3a5e;
+}
+
+.emg-hospital-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.emg-hospital-item {
+    padding: 15px;
+    border-radius: 8px;
+    background-color: rgba(76, 201, 240, 0.05);
+    border-left: 4px solid #4cc9f0;
+}
+
+.emg-hospital-name {
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #212529;
+}
+
+.emg-hospital-detail {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 5px;
+    font-size: 0.95rem;
+}
+
+.emg-detail-label {
+    font-weight: 500;
+    margin-right: 10px;
+    min-width: 70px;
+}
+
+.emg-embassy-details {
+    background-color: rgba(56, 176, 0, 0.05);
+    border-radius: 8px;
+    padding: 15px;
+}
+
+.emg-embassy-name {
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #212529;
+}
+
+.emg-advisory-level {
+    display: inline-block;
+    padding: 8px 15px;
+    background-color: #ffbe0b;
+    color: white;
+    font-weight: 600;
+    border-radius: 50px;
+    margin-bottom: 15px;
+}
+
+.emg-advisory-date {
+    display: block;
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-bottom: 10px;
+}
+
+.emg-safety-tips ul {
+    list-style-type: none;
+}
+
+.emg-safety-tips li {
+    position: relative;
+    padding-left: 30px;
+    margin-bottom: 12px;
+}
+
+.emg-safety-tips li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: #3a86ff;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.emg-action-bar {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+}
+
+.emg-btn {
+    padding: 14px 28px;
+    background-color: #3a86ff;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 6px rgba(58, 134, 255, 0.3);
+}
+
+.emg-btn:hover {
+    background-color: #2563eb;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(58, 134, 255, 0.4);
+}
+
+.emg-btn-emoji {
+    margin-right: 10px;
+    font-size: 1.2rem;
+}
+
+@media (max-width: 768px) {
+    .emg-grid {
+        grid-template-columns: 1fr;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+}
+
+/* Dark mode toggle styling */
+.emg-theme-switch {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 100;
+    transition: all 0.3s ease;
+    font-size: 1.5rem;
+}
+
+.emg-theme-switch:hover {
+    transform: rotate(30deg);
+}

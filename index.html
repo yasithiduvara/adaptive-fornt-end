@@ -1,132 +1,360 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link rel="stylesheet" href="./app/globals.css" />
-  </head>
-  <body>
-    <div class="flight-container">
-      <div class="tra-card">
-        <div class="tra-image-container">
-          <img
-            alt="Train"
-            class="car-image"
-            src="https://images.pexels.com/photos/72594/japan-train-railroad-railway-72594.jpeg?auto=compress&amp;cs=tinysrgb&amp;h=650&amp;w=940"
-          />
-        </div>
-        <div class="tra-content">
-          <div class="tra-head">
-            <h1 class="tra-car-title">Train</h1>
-            <div>
-              <span class="tra-price-value">100.0</span>
-              <span class="tra-price-currency">USD</span>
-            </div>
-          </div>
-        </div>
-        <p class="tra-location">Train from Cusco to Aguas Calientes</p>
-        <div class="tra-rating">
-          <span class="tra-rating-box">4.9</span>
-          <span class="tra-rating-text">Exilent<br />275 Reviews</span>
-          <span class="tra-rating-stars">★★★★★</span>
-        </div>
-        <div class="tra-divider"></div>
-        <div class="details">
-          <div class="detail-row">
-            <span class="detail-label">From</span>
-            <span class="detail-value">Cusco</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">To</span>
-            <span class="detail-value">Aguas Calientes</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Duration</span>
-            <span class="detail-value">3 hours 30 minutes</span>
-          </div>
-        </div>
-      </div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Travel Itinerary Card</title>
+    <style>
+
+        
+        .iti-card {
+            width: 100%;
+            max-width: 340px;
+            height: 120px;
+            position: relative;
+            perspective: 1500px;
+        }
+        
+        .iti-card-inner {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            margin: 20px;
+        }
+        
+        .iti-card:hover .iti-card-inner {
+            transform: rotateY(15deg);
+        }
+        
+        .iti-card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .iti-card-face-front {
+            background: #ffffff;
+        }
+        
+        .iti-day-badge {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 45px;
+            height: 45px;
+            background: #ff6b6b;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+            z-index: 2;
+            clip-path: polygon(0 0, 100% 0, 0 100%);
+            padding-right: 15px;
+            padding-bottom: 15px;
+        }
+        
+        .iti-day-badge span {
+            transform: rotate(-45deg);
+            margin-left: -8px;
+            margin-top: -8px;
+        }
+        
+        .iti-image-container {
+            width: 120px;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .iti-destination-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scale(1.1);
+            transition: transform 0.5s ease;
+        }
+        
+        .iti-card:hover .iti-destination-image {
+            transform: scale(1);
+        }
+        
+        .iti-image-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(0,0,0,0.2), rgba(0,0,0,0));
+        }
+        
+        .iti-card-content {
+            flex: 1;
+            padding: 15px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .iti-card-content::before {
+            content: '';
+            position: absolute;
+            left: -10px;
+            top: 20px;
+            bottom: 20px;
+            width: 3px;
+            background: linear-gradient(to bottom, #ff6b6b, #feca57);
+            border-radius: 3px;
+        }
+        
+        .iti-destination-title {
+            color: #2d3748;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .iti-meta-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .iti-meta-item {
+            display: flex;
+            align-items: center;
+            padding: 3px 8px;
+            background-color: #f8f9fa;
+            border-radius: 30px;
+            font-size: 10px;
+            color: #4a5568;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .iti-meta-item i {
+            margin-right: 4px;
+            font-size: 10px;
+        }
+        
+        .iti-time-icon {
+            color: #4299e1;
+        }
+        
+        .iti-location-icon {
+            color: #f56565;
+        }
+        
+        .iti-card-decoration {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 50px;
+            height: 50px;
+            background: #e2e8f0;
+            border-radius: 50%;
+            opacity: 0.3;
+            z-index: 0;
+        }
+        
+        
+        .iti-card-decoration:nth-child(2) {
+            top: auto;
+            bottom: -20px;
+            right: 40px;
+            width: 70px;
+            height: 70px;
+            background: #cbd5e0;
+        }
+        
+        .iti-activity-tag {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: linear-gradient(45deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            box-shadow: 0 2px 10px rgba(79, 172, 254, 0.3);
+        }
+        
+        @media (max-width: 480px) {
+            .iti-card {
+                max-width: 300px;
+                height: 100px;
+            }
+            
+            .iti-image-container {
+                width: 100px;
+            }
+            
+            .iti-destination-title {
+                font-size: 14px;
+            }
+            
+            .iti-meta-item {
+                font-size: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+  <div class="iti-card">
+    <div class="iti-card-inner">
+    <div class="iti-card-face iti-card-face-front">
+    <div class="iti-day-badge"><span>Day 1</span></div>
+    <div class="iti-image-container">
+    <img alt="City Walking Tour" class="iti-destination-image" src="https://images.pexels.com/photos/31091706/pexels-photo-31091706.jpeg?auto=compress&amp;cs=tinysrgb&amp;h=650&amp;w=940">
+    <div class="iti-image-overlay"></div>
     </div>
-    <div class="flight-container">
-      <div class="tra-card">
-        <div class="tra-image-container">
-          <img
-            alt="Shinkansen Bullet Train"
-            class="car-image"
-            src="https://images.pexels.com/photos/30936433/pexels-photo-30936433.jpeg?auto=compress&amp;cs=tinysrgb&amp;h=650&amp;w=940"
-          />
-        </div>
-        <div class="tra-content">
-          <div class="tra-head">
-            <h1 class="tra-car-title">Shinkansen Bullet Train</h1>
-            <div>
-              <span class="tra-price-value">150.0</span>
-              <span class="tra-price-currency">USD</span>
-            </div>
-          </div>
-        </div>
-        <p class="tra-location"></p>
-        <div class="tra-rating">
-          <span class="tra-rating-box">4.9</span>
-          <span class="tra-rating-text">Exilent<br />275 Reviews</span>
-          <span class="tra-rating-stars">★★★★★</span>
-        </div>
-        <div class="tra-divider"></div>
-        <div class="details">
-          <div class="detail-row">
-            <span class="detail-label">From</span>
-            <span class="detail-value">Tokyo</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">To</span>
-            <span class="detail-value">Kyoto</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Duration</span>
-            <span class="detail-value">2 hours 30 minutes</span>
-          </div>
-        </div>
-      </div>
-      <div class="tra-card">
-        <div class="tra-image-container">
-          <img
-            alt="Shinkansen Bullet Train"
-            class="car-image"
-            src="https://images.pexels.com/photos/30936433/pexels-photo-30936433.jpeg?auto=compress&amp;cs=tinysrgb&amp;h=650&amp;w=940"
-          />
-        </div>
-        <div class="tra-content">
-          <div class="tra-head">
-            <h1 class="tra-car-title">Shinkansen Bullet Train</h1>
-            <div>
-              <span class="tra-price-value">120.0</span>
-              <span class="tra-price-currency">USD</span>
-            </div>
-          </div>
-        </div>
-        <p class="tra-location"></p>
-        <div class="tra-rating">
-          <span class="tra-rating-box">4.9</span>
-          <span class="tra-rating-text">Exilent<br />275 Reviews</span>
-          <span class="tra-rating-stars">★★★★★</span>
-        </div>
-        <div class="tra-divider"></div>
-        <div class="details">
-          <div class="detail-row">
-            <span class="detail-label">From</span>
-            <span class="detail-value">Kyoto</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">To</span>
-            <span class="detail-value">Osaka</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Duration</span>
-            <span class="detail-value">30 minutes</span>
-          </div>
-        </div>
-      </div>
+    <div class="iti-card-content">
+    <div class="iti-card-decoration"></div>
+    <div class="iti-card-decoration"></div>
+    <h2 class="iti-destination-title">City Walking Tour</h2>
+    <div class="iti-meta-container">
+    <div class="iti-meta-item">
+    <i class="iti-time-icon">⏱</i> 3 hours
+                        </div>
+    <div class="iti-meta-item">
+    <i class="iti-location-icon">📍</i> Downtown
+                        </div>
     </div>
-  </body>
+    <div class="iti-activity-tag">activity</div>
+    </div>
+    </div>
+    </div>
+    <div class="iti-card-inner">
+    <div class="iti-card-face iti-card-face-front">
+    <div class="iti-day-badge"><span>Day 1</span></div>
+    <div class="iti-image-container">
+    <img alt="Budget Hostel" class="iti-destination-image" src="https://images.pexels.com/photos/7969099/pexels-photo-7969099.jpeg?auto=compress&amp;cs=tinysrgb&amp;h=650&amp;w=940">
+    <div class="iti-image-overlay"></div>
+    </div>
+    <div class="iti-card-content">
+    <div class="iti-card-decoration"></div>
+    <div class="iti-card-decoration"></div>
+    <h2 class="iti-destination-title">Budget Hostel</h2>
+    <div class="iti-meta-container">
+    <div class="iti-meta-item">
+    <i class="iti-time-icon">⏱</i> 1
+                        </div>
+    <div class="iti-meta-item">
+    <i class="iti-location-icon">📍</i> City Center
+                        </div>
+    </div>
+    <div class="iti-activity-tag">accommodation</div>
+    </div>
+    </div>
+    </div>
+    <div class="iti-card-inner">
+    <div class="iti-card-face iti-card-face-front">
+    <div class="iti-day-badge"><span>Day 2</span></div>
+    <div class="iti-image-container">
+    <img alt="Hiking in National Park" class="iti-destination-image" src="https://images.pexels.com/photos/2106380/pexels-photo-2106380.jpeg?auto=compress&amp;cs=tinysrgb&amp;h=650&amp;w=940">
+    <div class="iti-image-overlay"></div>
+    </div>
+    <div class="iti-card-content">
+    <div class="iti-card-decoration"></div>
+    <div class="iti-card-decoration"></div>
+    <h2 class="iti-destination-title">Hiking in National Park</h2>
+    <div class="iti-meta-container">
+    <div class="iti-meta-item">
+    <i class="iti-time-icon">⏱</i> 5 hours
+                        </div>
+    <div class="iti-meta-item">
+    <i class="iti-location-icon">📍</i> National Park
+                        </div>
+    </div>
+    <div class="iti-activity-tag">activity</div>
+    </div>
+    </div>
+    </div>
+    <div class="iti-card-inner">
+    <div class="iti-card-face iti-card-face-front">
+    <div class="iti-day-badge"><span>Day 2</span></div>
+    <div class="iti-image-container">
+    <img alt="Camping Site" class="iti-destination-image" src="https://images.pexels.com/photos/31043522/pexels-photo-31043522.jpeg?auto=compress&amp;cs=tinysrgb&amp;h=650&amp;w=940">
+    <div class="iti-image-overlay"></div>
+    </div>
+    <div class="iti-card-content">
+    <div class="iti-card-decoration"></div>
+    <div class="iti-card-decoration"></div>
+    <h2 class="iti-destination-title">Camping Site</h2>
+    <div class="iti-meta-container">
+    <div class="iti-meta-item">
+    <i class="iti-time-icon">⏱</i> 1
+                        </div>
+    <div class="iti-meta-item">
+    <i class="iti-location-icon">📍</i> National Park
+                        </div>
+    </div>
+    <div class="iti-activity-tag">accommodation</div>
+    </div>
+    </div>
+    </div>
+    <div class="iti-card-inner">
+    <div class="iti-card-face iti-card-face-front">
+    <div class="iti-day-badge"><span>Day 3</span></div>
+    <div class="iti-image-container">
+    <img alt="Visit Local Museum" class="iti-destination-image" src="https://images.pexels.com/photos/29868711/pexels-photo-29868711.jpeg?auto=compress&amp;cs=tinysrgb&amp;h=650&amp;w=940">
+    <div class="iti-image-overlay"></div>
+    </div>
+    <div class="iti-card-content">
+    <div class="iti-card-decoration"></div>
+    <div class="iti-card-decoration"></div>
+    <h2 class="iti-destination-title">Visit Local Museum</h2>
+    <div class="iti-meta-container">
+    <div class="iti-meta-item">
+    <i class="iti-time-icon">⏱</i> 2 hours
+                        </div>
+    <div class="iti-meta-item">
+    <i class="iti-location-icon">📍</i> Museum District
+                        </div>
+    </div>
+    <div class="iti-activity-tag">activity</div>
+    </div>
+    </div>
+    </div>
+    <div class="iti-card-inner">
+    <div class="iti-card-face iti-card-face-front">
+    <div class="iti-day-badge"><span>Day 3</span></div>
+    <div class="iti-image-container">
+    <img alt="Budget Inn" class="iti-destination-image" src="https://images.pexels.com/photos/7969105/pexels-photo-7969105.jpeg?auto=compress&amp;cs=tinysrgb&amp;h=650&amp;w=940">
+    <div class="iti-image-overlay"></div>
+    </div>
+    <div class="iti-card-content">
+    <div class="iti-card-decoration"></div>
+    <div class="iti-card-decoration"></div>
+    <h2 class="iti-destination-title">Budget Inn</h2>
+    <div class="iti-meta-container">
+    <div class="iti-meta-item">
+    <i class="iti-time-icon">⏱</i> 1
+                        </div>
+    <div class="iti-meta-item">
+    <i class="iti-location-icon">📍</i> Suburbs
+                        </div>
+    </div>
+    <div class="iti-activity-tag">accommodation</div>
+    </div>
+    </div>
+    </div>
+    </div>
+</body>
 </html>

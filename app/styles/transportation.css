@@ -1,0 +1,403 @@
+.tra-card {
+    display: flex;
+    width: 750px;
+    height: 250px;
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.tra-image-container {
+    flex: 0 0 35%;
+    position: relative;
+    overflow: hidden;
+}
+
+.car-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.tra-content {
+    flex: 1;
+    padding: 20px 30px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.tra-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.tra-car-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0;
+    letter-spacing: -0.3px;
+}
+
+.tra-price-value {
+    font-size: 32px;
+    font-weight: 800;
+    line-height: 1;
+    color: #1e293b;
+}
+
+.tra-price-currency {
+    font-size: 16px;
+    vertical-align: top;
+    color: #64748b;
+    font-weight: 600;
+    margin-left: 2px;
+}
+
+
+.tra-rating {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    right: 232px;
+    top: 90px;
+}
+
+.tra-rating-box {
+    background-color: #4361ee;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-weight: 700;
+    margin-right: 15px;
+    font-size: 16px;
+}
+
+.tra-rating-text {
+    color: #6b7280;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.tra-rating-stars {
+    margin-left: 15px;
+    color: #f59e0b;
+    letter-spacing: 1px;
+    font-size: 16px;
+}
+
+.tra-divider {
+    height: 1px;
+    background-color: #e5e7eb;
+    margin: 15px 0;
+    width: 100%;
+    position: absolute;
+    right: 0;
+    top: 130px;
+    width: 65%;
+}
+
+.details {
+    display: grid;
+    grid-template-columns: repeat(3, 160px);
+    gap: 8px;
+    position: absolute;
+    bottom: 15px;
+    right: 20px;
+    width: 500px;
+}
+
+.detail-row {
+    display: flex;
+    flex-direction: column;
+    background-color: #e1e2e2;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.detail-label {
+    color: #64748b;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.detail-value {
+    color: #0f172a;
+    font-weight: 600;
+    font-size: 14px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.flight-containerxx{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+    .traa-card {
+      width: 360px;
+      margin: 10px;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      transition: transform 0.3s, box-shadow 0.3s;
+      background: white;
+    }
+    
+    .traa-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    }
+    
+    .traa-card-image {
+      height: 200px;
+      background-color: #f0f0f0;
+      position: relative;
+      overflow: hidden;
+      transition: height 0.3s;
+    }
+    
+    .traa-transport-type {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      background-color: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 7px 14px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      transition: background-color 0.3s;
+    }
+    
+    .traa-favorite-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background-color: white;
+      color: #888;
+      border: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      transition: all 0.3s;
+    }
+    
+    .traa-favorite-btn:hover {
+      transform: scale(1.1);
+    }
+    
+    .traa-favorite-btn.active {
+      color: #e74c3c;
+    }
+    
+    .traa-card-content {
+      padding: 20px;
+    }
+    
+    .traa-transport-name {
+      font-size: 24px;
+      font-weight: bold;
+      color: #2c3e50;
+      margin: 0 0 5px 0;
+    }
+    
+    .traa-rating {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    
+    .traa-stars {
+      color: #f1c40f;
+      letter-spacing: 3px;
+    }
+    
+    .traa-reviews {
+      color: #7f8c8d;
+      font-size: 13px;
+      margin-left: 8px;
+    }
+    
+    .traa-price {
+      font-size: 22px;
+      color: #e74c3c;
+      font-weight: bold;
+      margin: 5px 0 15px 0;
+      display: flex;
+      align-items: baseline;
+    }
+    
+    .traa-price-currency {
+      font-size: 14px;
+      margin-right: 2px;
+    }
+    
+    .traa-price-previous {
+      font-size: 16px;
+      color: #7f8c8d;
+      text-decoration: line-through;
+      margin-left: 8px;
+      font-weight: normal;
+    }
+    
+    .traa-description {
+      color: #555;
+      font-size: 14px;
+      line-height: 1.5;
+      margin-bottom: 15px;
+    }
+    
+    .traa-features {
+      display: flex;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+    
+    .traa-feature {
+      font-size: 12px;
+      color: #555;
+      background-color: #f1f1f1;
+      padding: 5px 10px;
+      border-radius: 15px;
+      margin-right: 6px;
+      margin-bottom: 6px;
+    }
+    
+    .traa-journey-info {
+      background-color: #f9f9f9;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      border-left: 4px solid #3498db;
+    }
+    
+    .traa-journey-detail {
+      display: flex;
+      margin-bottom: 10px;
+      font-size: 14px;
+      align-items: center;
+    }
+    
+    .traa-journey-detail:last-child {
+      margin-bottom: 0;
+    }
+    
+    .traa-journey-icon {
+      width: 24px;
+      height: 24px;
+      background-color: #3498db;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 12px;
+      margin-right: 10px;
+    }
+    
+    .traa-journey-label {
+      width: 80px;
+      color: #7f8c8d;
+    }
+    
+    .traa-journey-value {
+      color: #2c3e50;
+      font-weight: 500;
+      flex-grow: 1;
+    }
+    
+    .traa-action-buttons {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .traa-btn {
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s;
+      flex: 1;
+      text-align: center;
+      border: none;
+    }
+    
+    .traa-btn-primary {
+      background-color: #3498db;
+      color: white;
+    }
+    
+    .traa-btn-primary:hover {
+      background-color: #2980b9;
+      transform: translateY(-2px);
+    }
+    
+    .traa-btn-secondary {
+      background-color: #f8f9fa;
+      color: #3498db;
+      border: 1px solid #3498db;
+    }
+    
+    .traa-btn-secondary:hover {
+      background-color: #e9ecef;
+      transform: translateY(-2px);
+    }
+    
+    .traa-departure-options {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease-out;
+    }
+    
+    .traa-departure-options.show {
+      max-height: 200px;
+      margin-bottom: 15px;
+    }
+    
+    .traa-departure-time {
+      padding: 10px;
+      margin: 5px 0;
+      background-color: #f8f9fa;
+      border-radius: 6px;
+      display: flex;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+    .traa-departure-time:hover {
+      background-color: #e9ecef;
+    }
+    
+    .traa-departure-time.selected {
+      background-color: #d6eaf8;
+      border-left: 3px solid #3498db;
+    }
+    
+    /* Animation for loading state */
+    @keyframes pulse {
+      0% { opacity: 0.6; }
+      50% { opacity: 1; }
+      100% { opacity: 0.6; }
+    }
+    
+    .traa-loading {
+      animation: pulse 1.5s infinite;
+    }

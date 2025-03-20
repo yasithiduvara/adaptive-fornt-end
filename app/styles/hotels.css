@@ -1,0 +1,360 @@
+
+/* Hotel Card */
+.custom-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .card-item {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .card {
+    position: relative;
+    width: 320px;
+    height: auto;
+    margin: 10px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: white;
+  }
+  
+  .card img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    display: block;
+  }
+  
+  .card-content {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    padding: 12px 16px;
+    color: #000000;
+    background: transparent;
+  }
+  
+  .card-content h2 {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-bottom: 4px;
+    color: #000;
+    line-height: 1.3;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  
+  
+  }
+  
+  .card-content p {
+    font-size: 0.9rem;
+    line-height: 1.4;
+    color: #6c757d;
+    margin-bottom: 4px;
+    height: 40px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  /* Add styles for rating */
+  .card-content::after {
+    position: absolute;
+    content: "★ 4.2";
+    top: 12px;
+    right: 16px;
+    font-size: 0.9rem;
+    color: #000;
+  }
+  
+  /* Add styles for heart and plus icons */
+  .card::before {
+    content: "♡";
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 2rem;
+    color: white;
+    z-index: 10;
+  }
+  
+  .card:hover::before {
+    color: rgb(255, 0, 170);
+  }
+  
+  /* .card::after {
+    content: "⊕";
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 1.5rem;
+    color: white;
+    z-index: 10;
+  } */
+  
+  /* Add price indicator */
+  .card-title {
+    display: none;
+    /* Hide the original title overlay */
+  }
+  
+  .card-subtitle {
+    font-size: 0.875rem;
+    color: #6c757d;
+    margin-bottom: 0;
+  }
+  
+  /* Add a dollar sign price indicator */
+  .card-content::before {
+    content: "$$";
+    bottom: 12px;
+    left: 16px;
+    font-size: 0.9rem;
+    color: #6c757d;
+  }
+  
+  
+  /* Hotel2 */
+  
+  .hotel-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .hotel-card {
+    width: 360px;
+    background: linear-gradient(145deg, #111111, #1a1a1a);
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5),
+      0 5px 15px rgba(0, 255, 255, 0.1),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+    position: relative;
+    backdrop-filter: blur(10px);
+    margin: 20px;
+  }
+  
+  .glass-effect {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.03) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  
+  .image-container {
+    position: relative;
+    height: 220px;
+    overflow: hidden;
+  }
+  
+  .hotel-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(1.2) contrast(1.1);
+    transition: transform 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+  }
+  
+  .hotel-card:hover .hotel-image {
+    transform: scale(1.08);
+  }
+  
+  .image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 50%);
+  }
+  
+  .price-badge {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #00ffff;
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 10px rgba(0, 255, 255, 0.2);
+  }
+  
+  .favorite-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .favorite-btn:hover {
+    background: rgba(255, 90, 95, 0.2);
+    border-color: rgba(255, 90, 95, 0.5);
+    transform: scale(1.1);
+  }
+  
+  .heart-icon {
+    color: #ff5a5f;
+    font-size: 18px;
+  }
+  
+  .card-content {
+    padding: 24px;
+    color: #ffffff;
+  }
+  
+  .hotel-name {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  
+  .hotel-title {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #ffffff;
+    margin: 0;
+    background: linear-gradient(90deg, #ffffff, #00ffff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .rating-container {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 6px 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .star-icon {
+    color: #ffdd00;
+    font-size: 16px;
+  }
+  
+  .rating-number {
+    font-weight: 600;
+    color: #ffffff;
+  }
+  
+  .divider {
+    height: 1px;
+    width: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.3), transparent);
+    margin: 16px 0;
+  }
+  
+  .hotel-description {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 20px;
+  }
+  
+  .location-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 20px;
+  }
+  
+  .location-icon {
+    color: #00ffff;
+  }
+  
+  .card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .amenities {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .amenity-icon {
+    width: 32px;
+    height: 32px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #00ffff;
+  }
+  
+  .book-btn {
+    background: linear-gradient(90deg, #00ffff, #0080ff);
+    color: #000000;
+    font-weight: 600;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+    box-shadow: 0 5px 15px rgba(0, 128, 255, 0.3);
+  }
+  
+  .book-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 128, 255, 0.5);
+  }
+  
+  @keyframes pulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(0, 255, 255, 0.4);
+    }
+  
+    70% {
+      box-shadow: 0 0 0 10px rgba(0, 255, 255, 0);
+    }
+  
+    100% {
+      box-shadow: 0 0 0 0 rgba(0, 255, 255, 0);
+    }
+  }
+  
+  .book-btn:active {
+    transform: translateY(1px);
+  }

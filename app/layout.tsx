@@ -1,5 +1,14 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import "./styles/destination.css";
+import "./styles/weather.css";
+import "./styles/transportation.css";
+import "./styles/itineraries.css";
+import "./styles/hotels.css";
+import "./styles/gallery.css";
+import "./styles/activities.css";
+import "./styles/restaurant.css";
+import "./styles/safety_info.css";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 
@@ -28,7 +37,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Toaster /> 
+        <Toaster />
         {children}
       </body>
     </html>
