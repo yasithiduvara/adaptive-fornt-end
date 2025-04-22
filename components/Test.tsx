@@ -5,7 +5,7 @@ interface TravelComponent {
   component_key: string;
   variant: string;
   html: string;
-  data: any;
+  data: string;
   available_variants?: string[]; // Make optional
 }
 

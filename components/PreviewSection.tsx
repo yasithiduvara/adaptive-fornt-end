@@ -1,6 +1,6 @@
 "use client";
-import React, { useState } from "react";
-import { Maximize2, Minimize2, Terminal } from "lucide-react";
+import React from "react";
+import { Maximize2, Minimize2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 import {
@@ -14,7 +14,6 @@ import { PreviewSectionProps } from "@/types/chat";
 
 export const PreviewSection = ({
   content,
-  logs,
   onToggleFullscreen,
   reward,
   onRewardChange,

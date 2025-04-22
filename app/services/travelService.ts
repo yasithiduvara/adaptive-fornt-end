@@ -9,10 +9,10 @@ export const streamTravelComponents = async (userQuery: string, {
   onDone: () => void;
   onError: (error: Error) => void;
 }) => {
-  const url = `http://localhost:8000/travel/stream-travel-assistant?user_query=${encodeURIComponent(userQuery)}`;
+  const url = `http://induvaray-w10vm.codegen.net:8000/travel/stream-travel-assistant?user_query=${encodeURIComponent(userQuery)}`;
   const eventSource = new EventSource(url, { withCredentials: true });
 
-  eventSource.addEventListener("error", (err) => {
+  eventSource.addEventListener("error", () => {
     onError(new Error('EventSource failed'));
     eventSource.close();
   });
@@ -36,7 +36,7 @@ export const streamTravelComponents = async (userQuery: string, {
 };
 
 export const submitReward = async (componentKey: string, reward: number, userQuery: string) => {
-  const response = await fetch("http://localhost:8000/reward/update", {
+  const response = await fetch("http://induvaray-w10vm.codegen.net:8000/reward/update", {
     method: "POST",
     credentials: "include",
     headers: {

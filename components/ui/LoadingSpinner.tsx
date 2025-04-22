@@ -22,9 +22,9 @@ export const LoadingSpinner = () => {
   return (
     <div className="flex items-center justify-center mt-12">
       <div className=" text-m font-medium animate-pulse transition-opacity duration-1000 mr-5">
-        {currentMessage === 0 && <p>Please wait</p>}
+        {currentMessage === 0 && <p>Thinking</p>}
 
-        {currentMessage === 1 && <p>Gathering information</p>}
+        {currentMessage === 1 && <p>Gathering informations</p>}
 
         {currentMessage === 2 && <p>Selecting components</p>}
 

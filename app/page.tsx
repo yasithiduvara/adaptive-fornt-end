@@ -2,7 +2,6 @@
 import { useState, useEffect, useRef } from "react";
 import { ChatInput } from "@/components/ChatInput";
 import { ChatMessage } from "@/components/ChatMessage";
-import { sanitizeHTML } from "@/lib/utils";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { PreviewSection } from "@/components/PreviewSection";
 import { useToast } from "@/components/ui/use-toast";
@@ -16,6 +15,7 @@ import {
 import { animateIn, animateOut } from "@/lib/animations";
 import { streamTravelComponents, submitReward } from "./services/travelService";
 import { TravelComponentPreview } from "@/components/TravelComponentPreview";
+import Link from "next/link";
 
 export default function Home() {
   const [messages, setMessages] = useState<
@@ -35,14 +35,7 @@ export default function Home() {
   const [componentKey, setComponentKey] = useState<string | null>(null);
   const [reward, setReward] = useState<number>(0);
 
-  const [globalVariant, setGlobalVariant] = useState<"html_1" | "html_2">(
-    "html_1"
-  );
-
-  // Helper function to toggle
-  const handleGlobalToggle = () => {
-    setGlobalVariant((prev) => (prev === "html_1" ? "html_2" : "html_1"));
-  };
+  // Removed globalVariant and handleGlobalToggle since they're not used
 
   // Add new state for input text
   const [inputText, setInputText] = useState("");
@@ -61,12 +54,10 @@ export default function Home() {
 
   useEffect(() => {
     if (selectedPromptType) {
-      // Animate in when selected
       if (suggestionsContainerRef.current) {
         animateIn(suggestionsContainerRef.current);
       }
 
-      // Click outside handler
       const handleClickOutside = (event: MouseEvent) => {
         if (
           suggestionsContainerRef.current &&
@@ -85,12 +76,9 @@ export default function Home() {
     }
   }, [selectedPromptType]);
 
-  // Updated handleSendMessage uses EventSource for streaming single component objects
   const handleSendMessage = (message: string) => {
-    setLastUserQuery(message); // Store the user's query
-    // Clear input after sending
+    setLastUserQuery(message);
     setInputText("");
-    // Add the user's message to the chat history.
     setMessages((prev) => [...prev, { text: message, isUser: true }]);
     setIsLoading(true);
     setComponents([]);
@@ -102,7 +90,9 @@ export default function Home() {
       </div>
     );
 
-    const eventSource = streamTravelComponents(message, {
+    // The eventSource is used internally by streamTravelComponents.
+    // If you need to reference it later (e.g., to close the connection), store it in a ref.
+    streamTravelComponents(message, {
       onData: (newComponent) => {
         setComponents((prev) => {
           const updatedComponents = [...prev, newComponent];
@@ -135,7 +125,6 @@ export default function Home() {
     });
   };
 
-  // Handle submitting the reward
   const handleRewardSubmit = async () => {
     if (!componentKey) {
       toast({
@@ -177,7 +166,6 @@ export default function Home() {
   return (
     <div className="flex h-screen justify-center bg-gray-50 ">
       {/* Chat Section */}
-
       <div
         className={`transition-all duration-300 ease-in-out bg-white  ${
           isPreviewExpanded
@@ -190,14 +178,10 @@ export default function Home() {
         <div className="flex flex-col h-full ">
           {!hasMessages ? (
             <div className="flex-1 flex flex-col items-center justify-center p-8">
-              <h1 className="text-4xl font-bold mb-4">
-                Smart Travel Assistant 🌴
-              </h1>
+              <h1 className="text-4xl font-bold mb-4">AI Adoptive UI 🌴</h1>
               <p className="text-xl text-gray-600 mb-12">
-                Where would you like to go?
+                Sample Scenarios Lia-muse
               </p>
-
-              {/* Fixed position container for ChatInput */}
               <div className="w-full max-w-2xl mb-5 relative z-10">
                 <ChatInput
                   onSend={() => handleSendMessage(inputText)}
@@ -206,8 +190,6 @@ export default function Home() {
                   onChange={(e) => setInputText(e.target.value)}
                 />
               </div>
-
-              {/* Updated suggestions and buttons container */}
               <div className="relative w-full max-w-2xl">
                 <div className="flex flex-wrap justify-center gap-4">
                   {!selectedPromptType &&
@@ -229,7 +211,6 @@ export default function Home() {
                       </button>
                     ))}
                 </div>
-
                 {selectedPromptType && (
                   <div
                     ref={suggestionsContainerRef}
@@ -238,11 +219,9 @@ export default function Home() {
                     <div className="py-1">
                       {PROMPT_SUGGESTIONS[selectedPromptType as PromptKey]?.map(
                         (prompt, index) => {
-                          // Find the corresponding button for the selected prompt type
                           const currentButton = actionButtons.find(
                             (btn) => btn.promptKey === selectedPromptType
                           );
-
                           return (
                             <button
                               key={index}
@@ -271,9 +250,11 @@ export default function Home() {
           ) : (
             <>
               <div className="p-4 border-b border-gray-200">
-                <h1 className="text-xl font-bold text-travel-900">
-                  Smart Travel Assistant
-                </h1>
+                <Link href="/">
+                  <h1 className="text-xl font-bold text-travel-900">
+                    AI Adoptive UI
+                  </h1>
+                </Link>
               </div>
               <div className="flex-1 overflow-auto p-4">
                 {messages.map((msg, index) => (
@@ -295,7 +276,6 @@ export default function Home() {
           )}
         </div>
       </div>
-
       {/* Preview Section */}
       {hasMessages && !isPreviewExpanded && (
         <div className="flex-1 p-4 animate-fade-in">
@@ -310,7 +290,6 @@ export default function Home() {
           />
         </div>
       )}
-
       {/* Expanded Preview */}
       {isPreviewExpanded && (
         <div className="w-full animate-fade-in">
