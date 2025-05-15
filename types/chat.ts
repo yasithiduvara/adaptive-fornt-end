@@ -28,6 +28,9 @@ export interface PreviewSectionProps {
   export interface TravelComponent {
     component_key: string;
     html_variants: Record<string, string>;
+    html: string;
     css?: string;
     description: string;
+    error?: string;
+    section_key: string;
   }

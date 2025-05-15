@@ -178,7 +178,7 @@ export default function Home() {
         <div className="flex flex-col h-full ">
           {!hasMessages ? (
             <div className="flex-1 flex flex-col items-center justify-center p-8">
-              <h1 className="text-4xl font-bold mb-4">AI Adoptive UI 🌴</h1>
+              <h1 className="text-4xl font-bold mb-4">AI Adaptive UI 🌴</h1>
               <p className="text-xl text-gray-600 mb-12">
                 Sample Scenarios Lia-muse
               </p>
@@ -252,7 +252,7 @@ export default function Home() {
               <div className="p-4 border-b border-gray-200">
                 <Link href="/">
                   <h1 className="text-xl font-bold text-travel-900">
-                    AI Adoptive UI
+                    AI Adaptive UI
                   </h1>
                 </Link>
               </div>
